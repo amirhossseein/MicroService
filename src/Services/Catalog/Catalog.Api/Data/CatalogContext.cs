@@ -6,12 +6,14 @@ namespace Catalog.Api.Data
 {
     public class CatalogContext : ICatalogContext
     {
+        private AppSettings appSettings;
         public CatalogContext(IOptions<AppSettings> options)
         {
-             var client = new MongoClient(options.Value.ConnectionString); 
-             var database = client.GetDatabase(options.Value.DatabaseName);
+            appSettings = options.Value;
+             var client = new MongoClient(appSettings.ConnectionString); 
+             var database = client.GetDatabase(appSettings.DatabaseName);
 
-            Products = database.GetCollection<Product>(options.Value.CollectionName);
+            Products = database.GetCollection<Product>(appSettings.CollectionName);
             CatalogContextSeed.SeedData(Products);
         }
         public IMongoCollection<Product> Products { get; }
